@@ -8,7 +8,7 @@ type ImagePath = `/${string}.${"png" | "jpg" | "jpeg" | "webp"}`;
 
 export type User = {
     id: UserId;
-    avatar: ImagePath;
+    avatar?: ImagePath;
     gender: Gender;
     name: string;
     profile: ProfileType;
@@ -17,3 +17,14 @@ export type User = {
         notifications?: boolean;
     };
 }
+
+const defaultUser: Omit<User, "id" | "name"> = {
+    gender: "U",
+    profile: "User",
+    preferences: {},
+};
+
+const createUser = (data: Pick<User, "id" | "name"> & Partial<User>): User => ({
+    ...defaultUser,
+    ...data
+});
