@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react";
+
 export type Gender = "M" | "F" | "U";
 export type ProfileType = "Admin" | "User";
 
