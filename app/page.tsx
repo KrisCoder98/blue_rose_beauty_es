@@ -1,20 +1,11 @@
-"use client";
-
-import { useState } from "react";
-
-import Footer from "./cmp/Footer";
-import Navbar from "./cmp/Navbar";
-
-import { User } from "./types/User";
-
-export default function Home() {
-  const [user, setUser] = useState<User | null>();
+export default function HomePage() {
 
   return <>
-    <Navbar className="fixed top-0 left-0 z-50 w-full" user={user} setUser={setUser} />
-
-    <main className="flex flex-col items-center justify-center min-h-screen w-full h-full"></main>
-
-    <Footer />
-  </>;
+    <div className="flex flex-row items-start gap-5 p-5 z-20">
+      <div className="flex flex-col items-start gap-5 w-full border-2 border-solid border-foreground p-5">
+        <h1 className="text-center w-full">Benvenuti su <span className="title">Blu Rose Beauty</span></h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+      </div>
+    </div>
+  </>
 }

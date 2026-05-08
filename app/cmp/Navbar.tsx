@@ -1,125 +1,113 @@
+"use client"
+
 import { useState } from "react";
 
 import Image from "next/image";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faInfoCircle, faArrowPointer } from "@fortawesome/free-solid-svg-icons";
-import { faCalendar, faHouse } from "@fortawesome/free-regular-svg-icons";
-import { faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faCalendar, faHouse, faAddressBook } from "@fortawesome/free-regular-svg-icons";
+import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 
-import { siteConfig } from "../config/siteConfig";
+import { Auth4Navbar } from "./AuthCmp";
+import { linkConfig, siteConfig } from "../config/siteConfig";
 import { MenuItemType } from "../types/MenuItemType";
 import { User } from "../types/User";
-import { Auth4Navbar } from "./AuthCmp";
-import {  } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import toast from "react-hot-toast";
 
-const logo = <Image src="/logo.jpg" alt="Logo" width={50} height={50} className="rounded-full" />;
+const menuItems: MenuItemType[] = [
+  { label: "Home", icon: faHouse, isActive: true, link: "/" },
+  {
+    label: "Prenota", icon: faCalendar, isActive: false, link: "/booking"
+  },
+  {
+    label: "Contatti", icon: faAddressBook, isActive: true, link: "/contacts"
+  }
+];
 
 export default function Navbar(
-  { className, user, setUser }: {
-    className?: string,
-    user: User | null | undefined,
-    setUser: React.Dispatch<React.SetStateAction<User | null | undefined>>
+  { className }: {
+    className?: string
   }) {
 
-  const menuItems: MenuItemType[] = [
-    { label: "Home", icon: faHouse, isActive: true },
-    { label: "Lavori", icon: faInfoCircle, isActive: false },
-    { label: "Prenota", icon: faCalendar, isActive: true, subItems: [
-        { label: "Calendario", icon: faCalendar, isActive: true },
-        { label: "Whatsapp", icon: faWhatsapp, isActive: true },
-        { label: "Email", icon: faInfoCircle, isActive: false },
-        { label: "Online", icon: faArrowPointer, isActive: true }
-      ]
-    }
-  ];
-
+  const [user, setUser] = useState<User | null | undefined>();
   const [activeItem, setActiveItem] = useState(menuItems[0]);
+  // const [open, setOpen] = useState(false);
+
+  function Name({ className }: { className?: string }) {
+
+    return <div className={`${className}`}>
+
+      <div>
+        <p className="flex flex-row items-center text-(--foreground) space-x-2 title bg-(transparent) group-hover:bg-(--background) p-2 rounded-full transition duration-300">
+          <Image src="/logo.jpeg" alt="Logo" width={50} height={50} className="rounded-full" />
+          <span className="hidden lg:block mr-2">{siteConfig.name}</span>
+        </p>
+      </div>
+
+      <div>
+        <Link className="m-2 cursor-pointer flex flex-row items-center hover:underline" href={linkConfig.instagram} target="_blank" rel="noopener noreferrer">
+          <FontAwesomeIcon icon={faInstagram} />
+          <span className="text-sm hidden lg:block">{siteConfig.contacts.instagram}</span>
+        </Link>
+      </div>
+    </div>;
+  }
+
+  function Menu({ className, items }: {
+    className?: string,
+    items: MenuItemType[]
+  }) {
+
+    const childClasses = (item: MenuItemType) => `
+                ${(activeItem && activeItem.label === item.label) ? "" : "hover:"}underline
+                ${!item.isActive ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}
+                flex flex-row flex-1 items-center py-4 px-7 rounded-full text-xl underline-offset-4 transition duration-300
+                hover:text-(--foreground) hover:bg-(--background)`
+              ;
+
+    return <ul className={className}>
+      {
+        items.map(
+          (item, index) => (item.link && item.isActive)
+            ? <Link key={`${index}-${item.label}`} href={item.link}>
+                <MenuItem 
+                  className={childClasses(item)}
+                  item={item}
+                />
+              </Link>
+            : <MenuItem key={`${index}-${item.label}`} className={childClasses(item)} item={item} />
+        )
+      }
+    </ul>;
+  }
+
+  function MenuItem(
+    { className, item }: {
+      className?: string,
+      item: MenuItemType
+    }) {
+
+    return <>
+      
+        <li className={className} onClick={item.isActive ? () => setActiveItem(item) : () => toast.error("Funzionalità non disponibile al momento")}>
+          {item.icon && <FontAwesomeIcon icon={item.icon} className="mr-1" />}
+          <div className="flex flex-col items-start pl-1.5 min-h-fit">
+            <p className="hidden lg:block">{item.label}</p>
+            {item.value && <p className="text-sm">{item.value}</p>}
+          </div>
+        </li>
+    </>;
+  }
 
   return (
-    <nav className={`${className} p-3 transition duration-300 flex flex-row justify-between items-center
-                    hover:text-(--foreground-secondary) hover:bg-(--background-secondary) hover:shadow-lg`}>
+    <nav className={`${className}`}>
 
-      <div className="flex flex-1 flex-row text-3xl max-h-min items-center">
+      <Name className="flex flex-1 flex-row text-3xl max-h-min items-center" />
 
-        <p className="flex flex-row items-center text-(--foreground) space-x-2 title bg-(--background) p-2 rounded-full">
-          {logo} <span className="mr-2">{siteConfig.name}</span>
-        </p>
+      <Menu className={`flex flex-row space-x-2.5`} items={menuItems} />
 
-        <div>
-          <FontAwesomeIcon icon={faInstagram} className="m-2 cursor-pointer" href="https://www.instagram.com/blurosebeauty/" target="_blank" />
-        </div>
-
-      </div>
-
-      <div className={`flex flex-row items-left justify-between space-y-5 h-full`}>
-
-        <ul className={
-          `rounded-lg p-2 flex flex-row space-x-2`
-        }>
-          {
-            menuItems.map(
-              (item, index) => <MenuItem key={`${index}-${item.label}`}
-                className={`${(activeItem.label === item.label) ? "" : "hover:"}underline underline-offset-4`}
-                item={item}
-                onClick={() => {
-                  if (item.isActive) {
-                    console.log(`Clicked on ${item.label} -> ${item}`);
-                    setActiveItem(item);
-                  } else {
-                    alert("In lavorazione 🚧");
-                  }
-                }} />
-
-            )}
-        </ul>
-
-      </div>
-      <Auth4Navbar className="flex flex-1 justify-end" user={user} setUser={setUser} />
+      <Auth4Navbar className="hidden lg:flex flex-1 justify-end" user={user} setUser={setUser} />
     </nav >
   );
-}
-
-function MenuItem(
-  { className, item, onClick }: {
-    className?: string,
-    item: MenuItemType,
-    onClick: () => void
-  }) {
-
-  const [showSubItems, setOpen] = useState(false);
-
-  return <li
-    className={`${className} ${!item.isActive ? "opacity-30 cursor-not-allowed" : "cursor-pointer"} py-2 text-xl cursor-pointer transition duration-250 px-5 rounded-full
-                  hover:text-(--foreground) hover:bg-(--background)`}
-    onClick={() => onClick()}
-  >
-    {item.icon && <FontAwesomeIcon icon={item.icon} className="mr-1" />}
-    {item.label}
-    {item.subItems && <FontAwesomeIcon className="ml-1"
-        icon={faAngleDown}
-        onClick={(e) => {
-          e.stopPropagation();
-          console.log('Clicked on sub item: ', item.label);
-          setOpen(!showSubItems);
-          }
-        }
-      />
-    }
-
-    {showSubItems && <ul className="absolute bg-(--background-secondary) m-3 p-2 border-(--foreground-secondary) text-(--foreground-secondary) border-2 flex flex-col space-y-2 rounded-lg shadow-2xl shadow-white/80 z-10">
-      {item.subItems?.map((subItem, index) => <MenuItem key={`${index}-${subItem.label}`}
-        item={subItem}
-        onClick={() => {
-          if (subItem.isActive) {
-            console.log(`Clicked on sub item ${subItem.label} of ${item.label}`);
-          } else {
-            alert("In lavorazione 🚧");
-          }
-          setOpen(false);
-        }}
-        />)
-      }
-    </ul>}
-  </li>;
 }
