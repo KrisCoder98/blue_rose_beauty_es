@@ -1,7 +1,7 @@
 export const siteConfig = {
     name: "Blu Rose Beauty",
     shortDescription: "Dove la tua bellezza trova spazio",
-    partitaIVA: "IT XXXXXXXXXXX",
+    partitaIVA: "03360280592",
     address: {
         city: "Formia",
         province: "Latina (LT)",

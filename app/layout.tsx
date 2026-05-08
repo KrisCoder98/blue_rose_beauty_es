@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Poppins, Inter, Damion } from "next/font/google";
+import { Qwitcher_Grypen, Poppins, Inter, Damion } from "next/font/google";
 import "./globals.css";
 import Navbar from "./cmp/Navbar";
 import { Toaster } from "react-hot-toast";
 import Footer from "./cmp/Footer";
 import { siteConfig } from "./config/siteConfig";
 
-const titleFont = Damion({ weight: "400", variable: "--font-title" });
+const titleFont = Qwitcher_Grypen({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-title" });
 const subtitleFont = Poppins({ subsets: ["latin"], weight: "500", variable: "--font-subtitle" });
 const bodyFont = Inter({ subsets: ["latin"], variable: "--font-body" });
 
@@ -30,7 +30,7 @@ export default function RootLayout({
         <div id="background"
           className="fixed inset-0 -z-20 bg-cover bg-center"
           style={{
-            backgroundImage: "url('/img/BluRoseBeauty_di_ElettraScarpellino.jpeg')"
+            backgroundImage: "url('/img/BluRoseBeauty_di_ElettraScarpellino_light.jpeg')"
             }}/>
         <div className="fixed inset-0 -z-10 bg-black/30" />
 
@@ -53,7 +53,7 @@ export default function RootLayout({
           {children}
         </main> 
 
-        <Footer className="fixed bottom-0 w-full px-5 py-2 z-10 transition duration-300
+        <Footer className="fixed bottom-0 w-full px-5 py-2 z-10 transition duration-300 flex flex-row justify-between space-x-15 items-center
           bg-(background-secondary) text-(--foreground-secondary)
           lg:bg-(transparent) lg:hover:bg-(--background-secondary)
           text-left lg:text-(--foreground) lg:hover:text-(--foreground-secondary)" />
