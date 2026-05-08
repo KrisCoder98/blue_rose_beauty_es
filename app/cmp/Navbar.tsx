@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react";
 
 import Image from "next/image";
@@ -16,20 +18,19 @@ import toast from "react-hot-toast";
 const menuItems: MenuItemType[] = [
   { label: "Home", icon: faHouse, isActive: true, link: "/" },
   {
-    label: "Prenota", icon: faCalendar, isActive: false, link: "/prenota"
+    label: "Prenota", icon: faCalendar, isActive: false, link: "/booking"
   },
   {
-    label: "Contatti", icon: faAddressBook, isActive: true, link: "/contatti"
+    label: "Contatti", icon: faAddressBook, isActive: true, link: "/contacts"
   }
 ];
 
 export default function Navbar(
-  { className, user, setUser }: {
-    className?: string,
-    user: User | null | undefined,
-    setUser: React.Dispatch<React.SetStateAction<User | null | undefined>>
+  { className }: {
+    className?: string
   }) {
 
+  const [user, setUser] = useState<User | null | undefined>();
   const [activeItem, setActiveItem] = useState(menuItems[0]);
   // const [open, setOpen] = useState(false);
 
@@ -38,16 +39,16 @@ export default function Navbar(
     return <div className={`${className}`}>
 
       <div>
-        <p className="flex flex-row items-center text-(--foreground) space-x-2 title bg-(--background) p-2 rounded-full">
+        <p className="flex flex-row items-center text-(--foreground) space-x-2 title bg-(transparent) group-hover:bg-(--background) p-2 rounded-full transition duration-300">
           <Image src="/logo.jpeg" alt="Logo" width={50} height={50} className="rounded-full" />
-          <span className="hidden md:block mr-2">{siteConfig.name}</span>
+          <span className="hidden lg:block mr-2">{siteConfig.name}</span>
         </p>
       </div>
 
       <div>
         <Link className="m-2 cursor-pointer flex flex-row items-center hover:underline" href={linkConfig.instagram} target="_blank" rel="noopener noreferrer">
           <FontAwesomeIcon icon={faInstagram} />
-          <span className="text-sm">{siteConfig.contacts.instagram}</span>
+          <span className="text-sm hidden lg:block">{siteConfig.contacts.instagram}</span>
         </Link>
       </div>
     </div>;
@@ -58,19 +59,26 @@ export default function Navbar(
     items: MenuItemType[]
   }) {
 
+    const childClasses = (item: MenuItemType) => `
+                ${(activeItem && activeItem.label === item.label) ? "" : "hover:"}underline
+                ${!item.isActive ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}
+                flex flex-row flex-1 items-center py-4 px-7 rounded-full text-xl underline-offset-4 transition duration-300
+                hover:text-(--foreground) hover:bg-(--background)`
+              ;
+
     return <ul className={className}>
       {
         items.map(
-          (item, index) => <MenuItem key={`${index}-${item.label}`}
-            className={`
-              ${(activeItem && activeItem.label === item.label) ? "" : "hover:"}underline
-              ${!item.isActive ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}
-              flex flex-row flex-1 items-center py-4 px-7 rounded-full text-xl underline-offset-4 transition duration-250
-              hover:text-(--foreground) hover:bg-(--background)`
-            }
-            item={item}
-          />
-        )}
+          (item, index) => (item.link && item.isActive)
+            ? <Link key={`${index}-${item.label}`} href={item.link}>
+                <MenuItem 
+                  className={childClasses(item)}
+                  item={item}
+                />
+              </Link>
+            : <MenuItem key={`${index}-${item.label}`} className={childClasses(item)} item={item} />
+        )
+      }
     </ul>;
   }
 
@@ -81,25 +89,25 @@ export default function Navbar(
     }) {
 
     return <>
-      <li className={className} onClick={item.isActive ? () => setActiveItem(item) : () => toast.error("Funzionalità non disponibile al momento")}>
-        {item.icon && <FontAwesomeIcon icon={item.icon} className="mr-1" />}
-        <div className="flex flex-col items-start pl-1.5 min-h-fit">
-          <p>{item.label}</p>
-          {item.value && <p className="text-sm">{item.value}</p>}
-        </div>
-      </li>
+      
+        <li className={className} onClick={item.isActive ? () => setActiveItem(item) : () => toast.error("Funzionalità non disponibile al momento")}>
+          {item.icon && <FontAwesomeIcon icon={item.icon} className="mr-1" />}
+          <div className="flex flex-col items-start pl-1.5 min-h-fit">
+            <p className="hidden lg:block">{item.label}</p>
+            {item.value && <p className="text-sm">{item.value}</p>}
+          </div>
+        </li>
     </>;
   }
 
   return (
-    <nav className={`${className} p-3 transition duration-300 flex flex-row justify-between items-center
-                    hover:text-(--foreground-secondary) hover:bg-(--background-secondary) hover:shadow-lg`}>
+    <nav className={`${className}`}>
 
       <Name className="flex flex-1 flex-row text-3xl max-h-min items-center" />
 
       <Menu className={`flex flex-row space-x-2.5`} items={menuItems} />
 
-      <Auth4Navbar className="flex flex-1 justify-end" user={user} setUser={setUser} />
+      <Auth4Navbar className="hidden lg:flex flex-1 justify-end" user={user} setUser={setUser} />
     </nav >
   );
 }
