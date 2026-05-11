@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Qwitcher_Grypen, Poppins, Inter, Damion } from "next/font/google";
+import { Qwitcher_Grypen, Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./cmp/Navbar";
 import { Toaster } from "react-hot-toast";
@@ -29,9 +29,7 @@ export default function RootLayout({
       <body className="h-full" >
         <div id="background"
           className="fixed inset-0 -z-20 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/img/BluRoseBeauty_di_ElettraScarpellino_light.jpeg')"
-            }}/>
+          style={{backgroundImage: "url('/img/BluRoseBeauty_di_ElettraScarpellino_light.jpeg')"}}/>
         <div className="fixed inset-0 -z-10 bg-black/30" />
 
         <Navbar className="fixed top-0 left-0 z-10 w-full p-3 transition duration-300 flex flex-row justify-between items-center
