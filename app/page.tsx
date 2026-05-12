@@ -1,10 +1,8 @@
-"use client";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHandHoldingDollar, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faHandHoldingDollar, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { PricesPreview } from "./prezzario/page";
-import Image from "next/image";
+import PortfolioPreview from "./portfolio/PortfolioPreview";
 
 export default function HomePage() {
 
@@ -13,9 +11,9 @@ export default function HomePage() {
     + "hover:bg-(--background-secondary) hover:text-(--foreground-secondary) hover:border-(--foreground-secondary)";
 
   return <>
-    <div className="grid grid-cols-4 gap-3 text-center group px-20">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-center group px-20">
 
-      <div id="productsAndPrices" className={`${containerClasses} col-span-1 row-span-5`}>
+      <div id="productsAndPrices" className={`${containerClasses} lg:col-span-1 md:col-span-2 row-span-5`}>
 
         <div>
           <p className="text-8xl title">I miei prodotti</p>
@@ -23,14 +21,21 @@ export default function HomePage() {
 
         <div className="mt-5 subtitle flex flex-row items-center justify-evenly">
 
-          <Link className="underline underline-offset-4 hover:underline-offset-2 hover:bg-(--background-secondary)/60 p-2 rounded-full cursor-pointer text-xl" href="/prezzario">
-            Scopri i prodotti
-          </Link>
+          {(() => {
+            const linkClasses = "flex flex-col items-center gap-3 underline underline-offset-4 hover:underline-offset-2 hover:bg-(--background-secondary)/60 p-2 rounded-full cursor-pointer text-xl";
 
-          <Link className="flex flex-col items-center gap-3 underline underline-offset-4 hover:underline-offset-2 hover:bg-(--background-secondary)/60 p-2 rounded-full cursor-pointer text-xl" href="/prezzario">
-            Scopri i prezzi
-            <FontAwesomeIcon icon={faHandHoldingDollar} size="xl" />
-          </Link>
+            return <>
+            <Link className={linkClasses} href="/prezzario">
+              Scopri i prodotti
+              <FontAwesomeIcon icon={faWandMagicSparkles} size="xl" />
+            </Link>
+
+              <Link className={linkClasses} href="/prezzario">
+                Scopri i prezzi
+                <FontAwesomeIcon icon={faHandHoldingDollar} size="xl" />
+              </Link>
+            </>;
+          })()}
         </div>
 
         <PricesPreview className={""} />
@@ -52,18 +57,14 @@ export default function HomePage() {
         <div className="mt-5 subtitle flex flex-row items-center justify-evenly">
 
         </div>
-        
+
       </div>
 
-      <div id="works" className={`${containerClasses} col-span-2 row-span-2`}>
+      <div id="portfolio" className={`${containerClasses} col-span-2 row-span-2`}>
 
         <p className="text-8xl title">I miei lavori</p>
 
-        <div className="flex flex-row gap-2 items-center">
-          <FontAwesomeIcon icon={faChevronLeft} size="5x"/>
-          <Image src="/logo.jpeg" alt="Logo" width={500} height={50} className="rounded-4xl mx-auto" />
-          <FontAwesomeIcon icon={faChevronRight} size="5x"/>
-        </div>
+        <PortfolioPreview className="rounded-2xl overflow-hidden" />
 
       </div>
 

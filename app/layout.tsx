@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Qwitcher_Grypen, Poppins, Inter } from "next/font/google";
 import "./globals.css";
+import "./CSS/animations.css";
 import Navbar from "./cmp/Navbar";
 import { Toaster } from "react-hot-toast";
 import Footer from "./cmp/Footer";
